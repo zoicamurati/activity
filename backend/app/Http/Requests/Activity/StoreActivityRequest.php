@@ -4,7 +4,7 @@ namespace App\Http\Requests\Activity;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ActivityRequest extends FormRequest
+class StoreActivityRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class ActivityRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => ['required'],
-            "description" => ['nullable'],
-            "status" => ['nullable']
+            "name" => ['required', 'string', 'max:250'],
+            "description" => ['nullable', 'string'],
         ];
     }
 }

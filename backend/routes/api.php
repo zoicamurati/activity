@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('login', 'AuthController@login')->name('login');
+Route::post('register', 'AuthController@register')->name('register');
 
 /**
  * Auth Routers
  */
 Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
 
-    Route::post('register', 'AuthController@register')->name('register');
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('me', 'AuthController@me');
@@ -31,15 +31,14 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
 /**
  * Activity Resource router
  */
-
-Route::group(['middleware' => 'jwt.verify', 'prefix' => 'activites'
-], function ($router) {
+/*'middleware' => 'jwt.verify',*/
+Route::group([ 'prefix' => 'activites'], function ($router) {
 
     Route::get('/', 'ActivityController@index')->name('activites.index');
     Route::post('/', 'ActivityController@store')->name('activites.store');
-    Route::get('/{activity}', 'ActivityController@show')->name('activites.show');
-    Route::put('/{activity}', 'ActivityController@update')->name('activites.update');
-    Route::patch('/{activity}/status', 'ActivityController@updateStatus')->name('activites.update.status');
-    Route::delete('/{activity}', 'ActivityController@destroy')->name('activites.destroy');
+    Route::get('/{id}', 'ActivityController@show')->name('activites.show');
+    Route::put('/{id}', 'ActivityController@update')->name('activites.update');
+    Route::patch('/{id}/status', 'ActivityController@updateStatus')->name('activites.update.status');
+    Route::delete('/{id}', 'ActivityController@destroy')->name('activites.destroy');
 
 });
