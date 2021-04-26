@@ -31,14 +31,14 @@ Route::group(['middleware' => 'api','prefix' => 'auth'], function ($router) {
 /**
  * Activity Resource router
  */
-/*'middleware' => 'jwt.verify',*/
-Route::group([ 'prefix' => 'activites'], function ($router) {
 
-    Route::get('/', 'ActivityController@index')->name('activites.index');
-    Route::post('/', 'ActivityController@store')->name('activites.store');
-    Route::get('/{id}', 'ActivityController@show')->name('activites.show');
-    Route::put('/{id}', 'ActivityController@update')->name('activites.update');
-    Route::patch('/{id}/status', 'ActivityController@updateStatus')->name('activites.update.status');
-    Route::delete('/{id}', 'ActivityController@destroy')->name('activites.destroy');
+Route::group([ 'prefix' => 'activities','middleware' => 'jwt.verify'], function ($router) {
+
+    Route::get('/', 'ActivityController@index')->name('activities.index');
+    Route::post('/', 'ActivityController@store')->name('activities.store');
+    Route::get('/{id}', 'ActivityController@show')->name('activities.show');
+    Route::put('/{id}', 'ActivityController@update')->name('activities.update');
+    Route::patch('/{id}/status', 'ActivityController@updateStatus')->name('activities.update.status');
+    Route::delete('/{id}', 'ActivityController@destroy')->name('activities.destroy');
 
 });

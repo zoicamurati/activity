@@ -1,25 +1,15 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import activities from "./modules/activities.js";
+import menu from "./modules/menu.js"
+import auth from "./modules/auth.js";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-    state: {
-        activites: [],
+    modules: {
+        menu,
+        activities,
+        auth,
     },
-    getters: {
-        getActivities: (state) => state.activites,
-    }
-    mutations: {
-        SET_ACTIVITIES(state, activites) {
-            state.activites = activites
-        },
-    },
-    actions: {
-        fetchActivities({commit}) {
-            MovieService.getActivities()
-                .then(data => commit('SET_ACTIVITIES', data.data))
-        },
-    },
-    modules: {},
 });

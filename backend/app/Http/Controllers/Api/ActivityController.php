@@ -13,14 +13,6 @@ use App\Http\Requests\Activity\StoreActivityRequest;
 class ActivityController extends Controller
 
 {
-    private $service;
-    private $user;
-
-    public function __construct(ActivityService $activity)
-    {
-        $this->service = $activity;
-        $this->user = Auth()->user();
-    }
 
     /**
      * Display a listing of the resource.
@@ -29,7 +21,7 @@ class ActivityController extends Controller
      */
     public function index()
     {
-        return response()->json(Auth()->user()->activities->where('status', 0), 200);
+         return response()->json(Auth::user()->activities()->where('status', 0)->get(), 200);
     }
 
 
@@ -43,7 +35,7 @@ class ActivityController extends Controller
     {
         $validated = $request->validated();
 
-        $activity = Auth()->user()->activities()->create($validated);
+        $activity = Auth::user()->activities()->create($validated);
 
         return response()->json([
             "message" => "Activity created successfully!",
@@ -53,9 +45,8 @@ class ActivityController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param \App\Models\Activity $activity
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -84,7 +75,7 @@ class ActivityController extends Controller
         return response()->json([
             "message" => "Activity updates successfully!",
             "data" => $activity,
-        ], 204);
+        ], 200);
     }
 
     /**
@@ -96,11 +87,12 @@ class ActivityController extends Controller
 
     public function destroy($id)
     {
-        $activity = Auth()->user()->activities()->findOrFail($id);
+         $activity = Auth::user()->activities()->findOrFail($id)->delete();
 
         return response()->json([
             "message" => "Activity deleted successfully!",
             "data" => $activity,
+            "id" => $id,
         ], 200);
     }
 
@@ -112,7 +104,7 @@ class ActivityController extends Controller
 
     public function updateStatus($id)
     {
-        $activity = Auth()->user()->activities()->findOrFail($id);
+        $activity = Auth::user()->activities()->findOrFail($id);
 
         $activity->update(['status' => !$activity->status]);
 

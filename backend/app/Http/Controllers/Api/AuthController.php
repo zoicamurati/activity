@@ -3,10 +3,36 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\RegisterAuthRequest;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    /**
+     * Register a User.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function register(RegisterAuthRequest $request): JsonResponse
+    {
+
+        $validator = $request->validated();
+
+        $user = User::create(array_merge(
+            $validator,
+            ['password' => bcrypt($request->password)]
+        ));
+
+        return response()->json([
+            'message' => 'User successfully registered',
+            'user' => $user,
+        ], 201);
+    }
+
 
     /**
      * Get a JWT via given credentials.
@@ -17,7 +43,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -31,7 +57,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user(),200);
+        return response()->json(auth()->user(), 200);
     }
 
     /**
@@ -43,7 +69,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out'],200);
+        return response()->json(['message' => 'Successfully logged out'], 200);
     }
 
     /**
@@ -59,13 +85,14 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
     {
         return response()->json([
+            'user' => Auth::user(),
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60

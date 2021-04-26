@@ -31,15 +31,15 @@
 
                                         <v-col cols="12">
 
-                                            <v-text-field outlined v-model="email" name="email" type="email"
+                                            <v-text-field outlined v-model="email"  type="email"  :rules="[rules.required,rules.email]"
                                                           label="E-mail"></v-text-field>
 
                                         </v-col>
 
                                         <v-col cols="12">
 
-                                            <v-text-field outlined v-model="password" name="password"
-                                                          label="Password"
+                                            <v-text-field outlined v-model="password"
+                                                          label="Password" :rules="[rules.required,rules.min]"
                                                           :append-icon="show_password ? 'mdi-eye' : 'mdi-eye-off'"
                                                           @click:append="show_password = !show_password"
                                                           :type="show_password ? 'text' : 'password'"></v-text-field>
@@ -52,15 +52,6 @@
                                            @click.stop="validate">{{ 'login' }}
                                     </v-btn>
 
-                                    <v-row class="mt-4">
-
-                                        <v-col cols="12" class="text-center">
-
-                                            <!--                                        <router-link to="forgot-password"> {{ 'forgot_password'}}</router-link>-->
-
-                                        </v-col>
-
-                                    </v-row>
 
                                 </v-container>
 
@@ -101,10 +92,31 @@ export default {
 
             loading: false,
 
-            show_password: false
+            show_password: false,
 
+            rules: {
+
+                required: value => !!value || 'required',
+
+                min: v => v.length >= 8 || 'at least 8 characters',
+
+                email: value => {
+
+                    let invalid = false;
+
+                    if (value == '' || value == null) return true;
+
+                    if (/.+@.+/.test(value) == false) {
+
+                        invalid = true;
+                    }
+
+                    return !invalid || 'e-mail not valid';
+
+                },
+
+            }
         }
-
     },
 
     mounted() {
@@ -130,11 +142,26 @@ export default {
         /**
          *
          */
-        doLogin: function () {
+        doLogin: async function () {
 
             this.loading = true;
 
-            document.getElementById('form').submit();
+            const {email, password} = this
+
+            await this.$root.$store.dispatch('auth/authRequest', {email, password});
+
+            let status = this.$root.$store.getters['auth/getStatus'];
+
+            let message = this.$root.$store.getters['auth/getMessage'];
+
+            let type = status == 200 ? "success" : 'error';
+
+            if (status == 200) {
+            await   this.$router.push("/");
+            }
+
+            this.$notify({type: type, text: message})
+
         }
 
     },

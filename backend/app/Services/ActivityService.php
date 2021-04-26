@@ -15,6 +15,6 @@ class ActivityService
      */
     public function index(Request $request)
     {
-        return $this->getCourses($request, ['residences', 'offices', 'tax_regime', 'courses'], $type);
+
     }
 }

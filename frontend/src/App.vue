@@ -1,11 +1,10 @@
 <template>
     <v-app>
-        <v-app>
-            <v-fade-transition hide-on-leave="true">
-                <router-view></router-view>
-            </v-fade-transition>
-        </v-app>
+        <notifications style="margin-top: 50px"/>
+
+        <router-view :key="$route.fullPath"></router-view>
     </v-app>
+
 </template>
 
 <script>

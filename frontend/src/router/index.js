@@ -1,43 +1,34 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import routes from "./routers.store";
+import Token from "../services/Token";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: "/",
-    name: "Login",
-    component: () =>
-        import(/* webpackChunkName: "auth" */ "../views/auth/Login.vue")
-  },
-
-{
-    path: "/login",
-    name: "Login",
-    component: () =>
-        import(/* webpackChunkName: "auth" */ "../views/auth/Login.vue")
-  },
-
-  {
-    path: "/register",
-    name: "Register",
-    component: () =>
-      import(/* webpackChunkName: "auth" */ "../views/auth/Register.vue")
-
-  },
-  {
-    path: "/activites",
-    name: "Activites",
-    component: () =>
-      import(/* webpackChunkName: "activites" */ "../views/activities/Activities.vue")
-
-  },
-];
+const token = !!localStorage.getItem('user-token')
+//const token =  !!Token.getToken();
 
 const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes,
+    mode: "history",
+    base: process.env.BASE_URL,
+    routes,
 });
+
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        // this route requires auth, check if logged in
+        // if not, redirect to login page.
+        if (!token) {
+            next({
+                path: '/login',
+            })
+        } else {
+            next()
+        }
+    } else {
+        next()
+    }
+})
 
 export default router;
