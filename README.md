@@ -2,15 +2,14 @@
 
 Backend
 
---composer install
---create .env
---php artisan key:generate
---php artisan jwt:generate
+-composer install
+create .env
+php artisan key:generate
+php artisan jwt:generate
 
---php artisan migrate
---php artisan db:seed
-
---php artisan serve
+php artisan migrate
+php artisan db:seed
+php artisan serve
 
 
 Frontend
