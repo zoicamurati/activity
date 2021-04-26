@@ -3,8 +3,11 @@
 Backend
 
 -composer install
-create .env
+
+-create .env
+
 php artisan key:generate
+
 php artisan jwt:generate
 
 php artisan migrate
